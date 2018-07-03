@@ -1,0 +1,62 @@
+function RSSMashup() {
+  
+  var RSS = [
+   
+"https://www.techrepublic.com/rssfeeds/topic/innovation/ "
+"https://www.techrepublic.com/rssfeeds/topic/tech-industry/ "
+"https://www.techrepublic.com/rssfeeds/topic/start-ups/"
+"http://www.techtimes.com/rss/sections/health.xml"
+"http://www.techtimes.com/rss/sections/t-lounge.xml"
+"http://www.engadget.com/rss.xml"
+"http://www.techtimes.com/rss/sections/personaltech.xml "
+"http://www.techtimes.com/rss/sections/science.xml "
+"https://www.techrepublic.com/rssfeeds/topic/artificial-intelligence/ "
+"http://images.apple.com/main/rss/hotnews/hotnews.rss"
+"feed://www.skyandtelescope.com/observing/astronomy-podcasts/feed/ "
+"feed://www.skyandtelescope.com/astronomy-blogs/explore-night-bob-king/feed/ "
+"https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss "
+"https://www.nasa.gov/rss/dyn/breaking_news.rss "
+"feed://www.skyandtelescope.com/astronomy-news/feed/ "
+"feed://www.skyandtelescope.com/observing/feed/ "
+"feed://www.skyandtelescope.com/astronomy-news/observing-news/feed/ "
+"feed://www.skyandtelescope.com/astronomy-resources/feed/ "
+"feed://www.skyandtelescope.com/observing/sky-at-a-glance/feed/ "
+"https://www.technologyreview.com/topnews.rss"
+"https://www.technologyreview.com/c/robotics/rss/ "
+ "https://www.technologyreview.com/c/energy/rss/ "
+  "https://www.technologyreview.com/c/computing/rss/"
+"	https://www.technologyreview.com/views/rss/ "
+	 "https://www.technologyreview.com/c/mobile/rss/" 
+	" https://www.technologyreview.com/c/biomedicine/rss/"
+	" https://www.technologyreview.com/c/business/rss/ "
+
+  ];
+  
+  for (var i=0; i<RSS.length; i++) {
+    
+    var url    = RSS[i];
+    var result = UrlFetchApp.fetch(RSS[i]);
+    var feed   = result.getContentText();
+    var xml    = Xml.parse(feed, false);  
+    var items  = xml.getElement().getElement("channel").getElements("item");
+    
+    var data = [];
+    
+    for (var j=0; j<items.length; j++) {
+      var utc = new Date(items[j].getElement("pubDate").getText());
+      var item = {
+        title: items[j].getElement("title").getText(),
+        link: items[j].getElement("link").getText(),
+        timestamp: utc.getTime().toString(),
+        source: url
+      };
+      data.push(item);
+    }
+    
+    var json = JSON.stringify(data);
+        
+    Logger.log(json);
+    
+  }
+  
+}
